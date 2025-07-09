@@ -13,4 +13,10 @@ config_version=5
 config/name="Challenge2025 Launcher"
 run/main_scene="uid://c6yagrjsk5nua"
 config/features=PackedStringArray("4.4", "Forward Plus")
+boot_splash/show_image=false
 config/icon="res://icon.svg"
+
+[display]
+
+window/size/viewport_width=800
+window/size/viewport_height=600
