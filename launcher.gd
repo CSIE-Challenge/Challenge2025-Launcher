@@ -85,14 +85,12 @@ func _on_download_finished(_result, response_code, _headers, _body):
 
 
 func _launch_game():
-	# var path = _get_download_path()
-	# if not FileAccess.file_exists(path):
-	# 	_message("Executable not found at: " + path)
-	# 	return
+	if not FileAccess.file_exists(SAVE_DIR):
+		_message("Executable not found at: " + SAVE_DIR)
+		return
 
-	if OS.has_feature("linux"):
+	if OS.has_feature("linux") or OS.has_feature("macos"):
 		OS.execute("chmod", ["+x", SAVE_DIR])
 
-	OS.execute(SAVE_DIR, [])
-	OS.delay_msec(5000)
+	OS.create_process(SAVE_DIR, [])
 	get_tree().quit()
