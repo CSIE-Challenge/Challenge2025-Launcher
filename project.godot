@@ -11,5 +11,6 @@ config_version=5
 [application]
 
 config/name="Challenge2025 Launcher"
+run/main_scene="uid://c6yagrjsk5nua"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
