@@ -1,7 +1,8 @@
 extends Control
 
-const GITHUB_API := "https://api.github.com/repos/HyperSoWeak/test-release/releases/latest"
+const GITHUB_API := "https://api.github.com/repos/CSIE-Challenge/Challenge2025/releases/latest"
 const SAVE_DIR := "GameBuilds"
+const AI_PATH := "GameBuilds/ai.zip"
 const GAME_NAME := "Challenge2025"
 const MAX_RETRY := 1
 
@@ -11,6 +12,7 @@ var executable_path: String
 var dots := 0
 var launch_retry_count := 0
 var asset_url := ""
+var ai_url := ""
 
 @onready var status_label := $CenterContainer/Label
 @onready var req := $HTTPRequest
@@ -91,12 +93,17 @@ func _on_fetch_completed(_result, response_code, _headers, body):
 	executable_path = "%s/%s" % [SAVE_DIR, executable_name]
 
 	for asset in data["assets"]:
-		if asset["name"] == executable_name:
+		if asset["name"] == "ai.zip":
+			ai_url = asset["browser_download_url"]
+		elif asset["name"] == executable_name:
 			asset_url = asset["browser_download_url"]
-			break
 
 	if asset_url == "":
 		_message("No matching asset found: " + executable_name)
+		return
+
+	if ai_url == "":
+		_message("No API found in release assets.")
 		return
 
 	var existing = _get_existing_executable_name()
@@ -123,7 +130,52 @@ func _on_download_completed(_result, response_code, _headers, _body):
 		return
 
 	_message("Download complete")
+	_download_ai()
+
+
+func _download_ai():
+	_message("Downloading API...")
+	req.download_file = AI_PATH
+	req.request_completed.disconnect(_on_download_completed)
+	req.request_completed.connect(_on_download_ai_completed)
+	req.request(ai_url)
+
+
+func _on_download_ai_completed(_result, response_code, _headers, _body):
+	if response_code != 200:
+		_message("API download failed: " + str(response_code))
+		return
+
+	_message("API download complete")
+	_extract_ai_model()
 	_launch_game()
+
+
+func _extract_ai_model():
+	_message("Extracting API from: " + AI_PATH)
+	_extract_all_from_zip(AI_PATH, SAVE_DIR)
+	DirAccess.remove_absolute(AI_PATH)
+	_message("API extracted successfully")
+
+
+func _extract_all_from_zip(path: String, to: String) -> void:
+	var reader = ZIPReader.new()
+	reader.open(path)
+
+	var root_dir = DirAccess.open(to)
+
+	var files = reader.get_files()
+	for file_path in files:
+		if file_path.ends_with("/"):
+			root_dir.make_dir_recursive(file_path)
+			continue
+
+		root_dir.make_dir_recursive(root_dir.get_current_dir().path_join(file_path).get_base_dir())
+		var file = FileAccess.open(
+			root_dir.get_current_dir().path_join(file_path), FileAccess.WRITE
+		)
+		var buffer = reader.read_file(file_path)
+		file.store_buffer(buffer)
 
 
 func _launch_game():
@@ -137,7 +189,7 @@ func _launch_game():
 		OS.execute("chmod", ["+x", executable_path])
 
 	var result := OS.execute(executable_path, ["--version"])
-	printerr("Executable check result: ", result)
+	print("Executable check result: ", result)
 
 	if result == 0:
 		OS.create_process(executable_path, ["--quiet"])
