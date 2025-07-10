@@ -192,9 +192,8 @@ func _launch_game():
 	var app_path = executable_path
 
 	if OS.has_feature("macos"):
-		var gatekeeper_disable := OS.execute("sudo", ["spctl", "--master-disable"])
-		print("Gatekeeper disable result: ", gatekeeper_disable)
 		app_path = SAVE_DIR + "/Challenge2025.app/Contents/MacOS/Challenge2025"
+		OS.execute("sudo", ["xattr", "-rd", "com.apple.quarantine", app_path])
 
 	if OS.has_feature("linux"):
 		OS.execute("chmod", ["+x", app_path])
