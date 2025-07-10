@@ -10,7 +10,8 @@ config_version=5
 
 [application]
 
-config/name="Challenge2025 Launcher"
+config/name="Challenge2025-Launcher"
+config/version="v0.1.0"
 run/main_scene="uid://c6yagrjsk5nua"
 config/features=PackedStringArray("4.4", "Forward Plus")
 boot_splash/show_image=false
@@ -20,3 +21,7 @@ config/icon="res://icon.svg"
 
 window/size/viewport_width=800
 window/size/viewport_height=600
+
+[rendering]
+
+textures/vram_compression/import_etc2_astc=true
