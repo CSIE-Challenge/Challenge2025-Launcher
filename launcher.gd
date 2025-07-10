@@ -40,7 +40,7 @@ func _get_platform_suffix() -> String:
 	if OS.has_feature("linux"):
 		return "linux.x86_64"
 	if OS.has_feature("macos"):
-		return "macos.app"
+		return "macos.zip"
 	return ""
 
 
@@ -129,6 +129,10 @@ func _on_download_completed(_result, response_code, _headers, _body):
 		_message("Download failed: " + str(response_code))
 		return
 
+	if OS.has_feature("macos"):
+		OS.execute("unzip", [executable_path])
+		OS.execute("mv", ["Challenge2025.app", SAVE_DIR])
+
 	_message("Download complete")
 	_download_ai()
 
@@ -185,14 +189,21 @@ func _launch_game():
 		_message("Executable not found at: " + executable_path)
 		return
 
-	if OS.has_feature("linux") or OS.has_feature("macos"):
-		OS.execute("chmod", ["+x", executable_path])
+	var app_path = executable_path
 
-	var result := OS.execute(executable_path, ["--version"])
+	if OS.has_feature("macos"):
+		var gatekeeper_disable := OS.execute("sudo", ["spctl", "--master-disable"])
+		print("Gatekeeper disable result: ", gatekeeper_disable)
+		app_path = SAVE_DIR + "/Challenge2025.app/Contents/MacOS/Challenge2025"
+
+	if OS.has_feature("linux"):
+		OS.execute("chmod", ["+x", app_path])
+
+	var result := OS.execute(app_path, ["--version"])
 	print("Executable check result: ", result)
 
 	if result == 0:
-		OS.create_process(executable_path, ["--quiet"])
+		OS.create_process(app_path, ["--quiet"])
 		_message("Game launched. Goodbye!")
 		get_tree().quit()
 	else:
