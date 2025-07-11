@@ -11,16 +11,17 @@ config_version=5
 [application]
 
 config/name="Challenge2025-Launcher"
-config/version="v1.0.1"
+config/version="v1.0.2"
 run/main_scene="uid://c6yagrjsk5nua"
 config/features=PackedStringArray("4.4", "Forward Plus")
 boot_splash/show_image=false
-config/icon="res://icon.svg"
+config/icon="uid://bc5djl3mxxjfi"
 
 [display]
 
 window/size/viewport_width=800
 window/size/viewport_height=600
+window/size/resizable=false
 
 [rendering]
 
