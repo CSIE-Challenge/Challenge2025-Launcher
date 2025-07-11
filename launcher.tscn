@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://c6yagrjsk5nua"]
+[gd_scene load_steps=3 format=3 uid="uid://c6yagrjsk5nua"]
 
 [ext_resource type="Script" uid="uid://lbkhnmir6e5k" path="res://launcher.gd" id="1_4emaf"]
+[ext_resource type="VideoStream" uid="uid://ci5jgp6q4nl3k" path="res://Green-Screen-Spinning-Cat-Meme-OIIAIOIIIAI-Meme-Yadro-Green-Screen-_240p_-h264_.ogv" id="2_cvfd6"]
 
 [node name="Launcher" type="Control"]
 layout_mode = 3
@@ -10,6 +11,33 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_4emaf")
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -532.5
+offset_top = -300.0
+offset_right = 532.5
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("2_cvfd6")
+autoplay = true
+expand = true
+loop = true
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.541176)
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -56,27 +84,6 @@ grow_vertical = 0
 theme_override_font_sizes/font_size = 30
 text = "Exit"
 
-[node name="Dots" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = 85.0
-offset_right = 20.0
-offset_bottom = 124.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 26
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
 
-[node name="Timer" type="Timer" parent="."]
-autostart = true
-
 [connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
-[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

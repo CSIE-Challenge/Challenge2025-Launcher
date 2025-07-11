@@ -9,15 +9,12 @@ const MAX_RETRY := 1
 var version: String
 var executable_name: String
 var executable_path: String
-var dots := 0
 var launch_retry_count := 0
 var asset_url := ""
 var ai_url := ""
 
 @onready var status_label := $CenterContainer/Label
 @onready var req := $HTTPRequest
-@onready var timer := $Timer
-@onready var dots_label := $Dots
 
 
 func _message(message: String):
@@ -217,8 +214,3 @@ func _launch_game():
 
 func _on_exit_pressed() -> void:
 	get_tree().quit()
-
-
-func _on_timer_timeout() -> void:
-	dots = (dots + 1) % 6
-	dots_label.text = ".".repeat(dots)
