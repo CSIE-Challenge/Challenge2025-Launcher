@@ -193,7 +193,7 @@ func _launch_game():
 
 	if OS.has_feature("macos"):
 		app_path = SAVE_DIR + "/Challenge2025.app/Contents/MacOS/Challenge2025"
-		OS.execute("sudo", ["xattr", "-rd", "com.apple.quarantine", app_path])
+		OS.execute("xattr", ["-rd", "com.apple.quarantine", app_path])
 
 	if OS.has_feature("linux"):
 		OS.execute("chmod", ["+x", app_path])
