@@ -1,4 +1,4 @@
-# Challenge2025 Launcher｜挑戰2025 啟動器
+# Challenge2025 Launcher
 
 🚀 The official launcher for [Challenge2025](https://github.com/CSIE-Challenge/Challenge2025), providing seamless updates and automatic startup for the game.  
 🚀 [Challenge2025](https://github.com/CSIE-Challenge/Challenge2025) 官方啟動器，提供遊戲自動更新與啟動功能。
