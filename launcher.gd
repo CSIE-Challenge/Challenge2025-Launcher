@@ -185,6 +185,10 @@ func _extract_all_from_zip(path: String, to: String) -> void:
 func _launch_game():
 	_message("Launching game with version: " + version)
 
+	if not _check_python_version():
+		_message("Python 3.12 or newer is required to run this game.")
+		return
+
 	if not FileAccess.file_exists(executable_path):
 		_message("Executable not found at: " + executable_path)
 		return
@@ -213,6 +217,37 @@ func _launch_game():
 			_download_executable()
 		else:
 			_message("Failed to launch after retry. Error code: %d" % result)
+
+
+func _check_python_version() -> bool:
+	var out := []
+	var result := OS.execute("python3", ["--version"], out)
+	if result != 0 or out.is_empty():
+		_message("Python3 not found or failed to run.")
+		return false
+
+	printerr(out)
+
+	var version_str = out[0].strip_edges()
+	print("Detected Python version:", version_str)
+
+	var regex = RegEx.new()
+	regex.compile("Python\\s+(\\d+)\\.(\\d+)\\.(\\d+)")
+	var match = regex.search(version_str)
+
+	if match:
+		var major = int(match.get_string(1))
+		var minor = int(match.get_string(2))
+
+		if major > 3 or (major == 3 and minor >= 12):
+			_message("Python version is sufficient: " + version_str)
+			return true
+
+		_message("Python 3.12 or newer is required.")
+		return false
+
+	_message("Could not parse Python version.")
+	return false
 
 
 func _on_exit_pressed() -> void:
