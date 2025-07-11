@@ -26,26 +26,22 @@ fi
 
 # Remove existing zip file if it exists
 echo "Removing existing zip file if it exists..."
-if [ -f "${VERSION}Challenge2025_Launcher_macos.zip" ]; then
-    rm "${VERSION}Challenge2025_Launcher_macos.zip"
+if [ -f "${VERSION}_Challenge2025_Launcher_macos.zip" ]; then
+    rm "${VERSION}_Challenge2025_Launcher_macos.zip"
 fi
 
 # Make directory for the build
 echo "Creating build directory..."
 mkdir -p Challenge2025-Launcher
-mkdir -p Challenge2025-Launcher/Applications
+mkdir -p Challenge2025-Launcher/.hiddenapp
 
 # Copy the launcher to the build directory
 echo "Copying $GODOT_LAUNCHER_NAME to build directory..."
-cp -r "$GODOT_LAUNCHER_NAME" Challenge2025-Launcher/Applications/
-
-# Compile the Swift launcher
-echo "Compiling Swift launcher..."
-swiftc mac_launcher.swift -o Challenge2025-MacLauncher
+cp -r "$GODOT_LAUNCHER_NAME" Challenge2025-Launcher/.hiddenapp/
 
 # Copy the run script to the build directory
 echo "Copying Swift launcher to build directory..."
-cp Challenge2025-MacLauncher Challenge2025-Launcher/
+cp mac_launcher.sh Challenge2025-Launcher/Challenge2025-Launcher.command
 
 # Create the zip file
 echo "Creating zip file..."
