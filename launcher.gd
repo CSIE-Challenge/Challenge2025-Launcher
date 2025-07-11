@@ -2,7 +2,8 @@ extends Control
 
 const GITHUB_API := "https://api.github.com/repos/CSIE-Challenge/Challenge2025/releases/latest"
 const SAVE_DIR := "GameBuilds"
-const AI_PATH := "GameBuilds/ai.zip"
+const AGENT_PATH := "GameBuilds/agent.zip"
+const AGENT_ASSET_NAME := "agent.zip"
 const GAME_NAME := "Challenge2025"
 const MAX_RETRY := 1
 
@@ -11,7 +12,7 @@ var executable_name: String
 var executable_path: String
 var launch_retry_count := 0
 var asset_url := ""
-var ai_url := ""
+var agent_url := ""
 
 @onready var status_label := $CenterContainer/Label
 @onready var req := $HTTPRequest
@@ -90,8 +91,8 @@ func _on_fetch_completed(_result, response_code, _headers, body):
 	executable_path = "%s/%s" % [SAVE_DIR, executable_name]
 
 	for asset in data["assets"]:
-		if asset["name"] == "ai.zip":
-			ai_url = asset["browser_download_url"]
+		if asset["name"] == AGENT_ASSET_NAME:
+			agent_url = asset["browser_download_url"]
 		elif asset["name"] == executable_name:
 			asset_url = asset["browser_download_url"]
 
@@ -99,7 +100,7 @@ func _on_fetch_completed(_result, response_code, _headers, body):
 		_message("No matching asset found: " + executable_name)
 		return
 
-	if ai_url == "":
+	if agent_url == "":
 		_message("No API found in release assets.")
 		return
 
@@ -136,10 +137,10 @@ func _on_download_completed(_result, response_code, _headers, _body):
 
 func _download_ai():
 	_message("Downloading API...")
-	req.download_file = AI_PATH
+	req.download_file = AGENT_PATH
 	req.request_completed.disconnect(_on_download_completed)
 	req.request_completed.connect(_on_download_ai_completed)
-	req.request(ai_url)
+	req.request(agent_url)
 
 
 func _on_download_ai_completed(_result, response_code, _headers, _body):
@@ -153,9 +154,9 @@ func _on_download_ai_completed(_result, response_code, _headers, _body):
 
 
 func _extract_ai_model():
-	_message("Extracting API from: " + AI_PATH)
-	_extract_all_from_zip(AI_PATH, SAVE_DIR)
-	DirAccess.remove_absolute(AI_PATH)
+	_message("Extracting API from: " + AGENT_PATH)
+	_extract_all_from_zip(AGENT_PATH, ".")
+	DirAccess.remove_absolute(AGENT_PATH)
 	_message("API extracted successfully")
 
 
