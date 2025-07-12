@@ -20,3 +20,4 @@ mono_crash.*.json
 build/
 export/
 GameBuilds/
+agent/
